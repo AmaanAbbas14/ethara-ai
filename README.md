@@ -21,11 +21,14 @@ Full-stack assignment app for managing projects, teams, and tasks with `admin` /
 ## Run locally
 
 ```bash
+node -v
 npm install
 npm start
 ```
 
 Then open [http://localhost:3000](http://localhost:3000).
+
+Recommended Node version: `20.x`
 
 ## Role behavior
 
