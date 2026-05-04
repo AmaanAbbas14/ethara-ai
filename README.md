@@ -10,19 +10,23 @@ Full-stack assignment app for managing projects, teams, and tasks with `admin` /
 - Task creation, assignment, status tracking, and overdue visibility
 - Dashboard summary for total, in-progress, completed, and overdue tasks
 - SQLite persistence for easy local setup and Railway deployment
+- Next.js frontend with React-based UI
 
 ## Tech Stack
 
 - Node.js
+- Next.js
+- React
 - Express
 - SQLite via `better-sqlite3`
-- Vanilla HTML, CSS, and JavaScript frontend
+- CSS via global Next.js styles
 
 ## Run locally
 
 ```bash
 node -v
 npm install
+npm run build
 npm start
 ```
 
@@ -47,6 +51,7 @@ Recommended Node version: `20.x`
 
 ```bash
 npm install
+npm run build
 npm start
 ```
 

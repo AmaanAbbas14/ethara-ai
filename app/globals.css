@@ -1,7 +1,6 @@
 :root {
   --bg: #f2ede2;
   --panel: #fffaf1;
-  --card: rgba(255, 255, 255, 0.7);
   --ink: #1f1b17;
   --muted: #6c655e;
   --line: rgba(31, 27, 23, 0.12);
@@ -17,15 +16,27 @@
   box-sizing: border-box;
 }
 
+html,
 body {
   margin: 0;
+  min-height: 100%;
+}
+
+body {
   min-height: 100vh;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   color: var(--ink);
   background:
     radial-gradient(circle at top left, rgba(196, 92, 43, 0.22), transparent 26%),
     radial-gradient(circle at bottom right, rgba(29, 107, 71, 0.18), transparent 20%),
     linear-gradient(135deg, #efe2cc 0%, #f8f4eb 52%, #ece4d5 100%);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }
 
 .page-shell {
@@ -37,11 +48,11 @@ body {
 }
 
 .hero-panel,
-.card {
+.card,
+.boot-card {
   border: 1px solid var(--line);
   border-radius: 28px;
   box-shadow: var(--shadow);
-  backdrop-filter: blur(12px);
 }
 
 .hero-panel {
@@ -70,7 +81,8 @@ body {
 .hero-stats,
 .summary-grid,
 .layout-grid,
-.admin-grid {
+.admin-grid,
+.project-detail {
   display: grid;
   gap: 16px;
 }
@@ -81,19 +93,22 @@ body {
 
 .stat-card,
 .summary-card,
-.item-card {
+.item-card,
+.task-card {
   border-radius: 20px;
   padding: 16px;
+}
+
+.stat-card {
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.08);
 }
 
-.stat-card span,
-.summary-card span,
 .eyebrow,
-.meta {
+.meta,
+.summary-card span,
+.stat-card span {
   display: block;
-  color: var(--muted);
   font-size: 0.82rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -104,23 +119,14 @@ body {
   color: rgba(255, 245, 237, 0.62);
 }
 
-.stat-card strong,
-.summary-card strong {
-  font-size: 1.05rem;
+.app-panel,
+.dashboard-shell {
+  display: grid;
+  gap: 20px;
 }
 
-.app-panel {
-  padding: 12px 0;
-}
-
-.auth-card,
 .card {
-  background: rgba(255, 250, 241, 0.8);
-}
-
-.auth-card,
-.card,
-#dashboard-view {
+  background: rgba(255, 250, 241, 0.82);
   padding: 28px;
 }
 
@@ -142,7 +148,7 @@ body {
 }
 
 .toolbar {
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .role-badge,
@@ -156,19 +162,20 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  background: rgba(196, 92, 43, 0.08);
 }
 
 .role-badge {
-  background: rgba(196, 92, 43, 0.12);
   color: var(--accent-dark);
 }
 
 .summary-grid {
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  margin-bottom: 20px;
 }
 
-.summary-card {
+.summary-card,
+.item-card,
+.task-card {
   background: var(--panel);
   border: 1px solid var(--line);
 }
@@ -183,7 +190,6 @@ body {
 .layout-grid,
 .admin-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin-bottom: 20px;
 }
 
 .stack-list {
@@ -192,23 +198,13 @@ body {
   gap: 12px;
 }
 
-.item-card,
-.task-card {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 16px;
-}
-
-.item-card button,
-.task-card button {
-  margin-top: 12px;
-}
-
-form,
 .form-grid {
   display: grid;
   gap: 14px;
+}
+
+.compact {
+  align-content: start;
 }
 
 label {
@@ -219,19 +215,12 @@ label {
 
 input,
 textarea,
-select,
-button {
-  font: inherit;
-}
-
-input,
-textarea,
 select {
   width: 100%;
   padding: 12px 14px;
   border-radius: 14px;
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.9);
   color: var(--ink);
 }
 
@@ -254,13 +243,19 @@ button {
 
 .primary-button {
   background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  color: white;
+  color: #fff;
 }
 
 .secondary-button,
 .tab-button {
   background: rgba(196, 92, 43, 0.08);
   color: var(--accent-dark);
+}
+
+.primary-button:disabled,
+.secondary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .auth-tabs {
@@ -271,26 +266,36 @@ button {
 
 .tab-button.active {
   background: var(--accent-dark);
-  color: white;
+  color: #fff;
+}
+
+.message,
+.message-spacer {
+  min-height: 24px;
+  margin: 10px 0 0;
 }
 
 .message {
-  min-height: 20px;
-  margin: 12px 0 0;
-  color: var(--accent-dark);
+  font-weight: 600;
 }
 
-.project-detail {
-  display: grid;
-  gap: 16px;
+.message.error {
+  color: var(--red);
 }
 
-.project-meta,
-.task-meta {
+.message.success {
+  color: var(--green);
+}
+
+.meta {
+  color: var(--muted);
+}
+
+.meta-row {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 .chip.todo {
@@ -298,7 +303,8 @@ button {
   color: var(--amber);
 }
 
-.chip.in_progress {
+.chip.in_progress,
+.chip.low {
   background: rgba(29, 107, 71, 0.12);
   color: var(--green);
 }
@@ -318,11 +324,6 @@ button {
   color: var(--accent-dark);
 }
 
-.chip.low {
-  background: rgba(29, 107, 71, 0.12);
-  color: var(--green);
-}
-
 .empty-state {
   padding: 24px;
   border: 1px dashed var(--line);
@@ -331,8 +332,20 @@ button {
   text-align: center;
 }
 
-.hidden {
-  display: none !important;
+.member-control {
+  margin-bottom: 16px;
+}
+
+.boot-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.boot-card {
+  padding: 22px 28px;
+  background: var(--panel);
 }
 
 @media (max-width: 1100px) {
@@ -357,10 +370,8 @@ button {
     padding: 12px;
   }
 
-  .auth-card,
-  .card,
-  #dashboard-view,
-  .hero-panel {
+  .hero-panel,
+  .card {
     padding: 20px;
     border-radius: 24px;
   }

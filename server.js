@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
+const next = require("next");
 const Database = require("better-sqlite3");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -8,9 +9,12 @@ const jwt = require("jsonwebtoken");
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
+const dev = process.env.NODE_ENV !== "production";
 const dataDir =
   process.env.RAILWAY_VOLUME_MOUNT_PATH || path.join(__dirname, "data");
 const dbPath = path.join(dataDir, "app.db");
+const nextApp = next({ dev, dir: __dirname });
+const nextHandler = nextApp.getRequestHandler();
 
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
@@ -65,8 +69,6 @@ db.exec(`
 `);
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
-
 const createToken = (user) =>
   jwt.sign(
     { id: user.id, email: user.email, role: user.role, name: user.name },
@@ -555,10 +557,16 @@ app.get("/api/dashboard", auth, (req, res) => {
   });
 });
 
-app.use((req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
+nextApp
+  .prepare()
+  .then(() => {
+    app.all(/.*/, (req, res) => nextHandler(req, res));
 
-app.listen(PORT, () => {
-  console.log(`Team Task Manager running on http://localhost:${PORT}`);
-});
+    app.listen(PORT, () => {
+      console.log(`Team Task Manager running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error("Failed to start application", error);
+    process.exit(1);
+  });
